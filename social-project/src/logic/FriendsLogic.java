@@ -64,7 +64,8 @@ public class FriendsLogic {
             }
         }
         if (myFriend == null) {
-            System.out.print("Không có lời mời kết bạn nào.");
+            System.out.println("Chưa có bạn bè.");
+            System.out.println("------------------------");
         } else {
             System.out.println("Danh sách");
             for (int i = 0; i < myFriend.size(); i++) {
@@ -89,8 +90,10 @@ public class FriendsLogic {
                 break;
             }
         }
-        if (userListFriendsWait == null) {
-            System.out.print("Không có lời mời kết bạn nào.");
+        if (userListFriendsWait == null || userListFriendsWait.size() < 1) {
+            System.out.println("Không có lời mời kết bạn nào.");
+            System.out.println("------------------------");
+
         } else {
             System.out.println("Lời mời kết bạn của bạn:");
             for (int i = 0; i < userListFriendsWait.size(); i++) {
@@ -119,7 +122,10 @@ public class FriendsLogic {
                 choiceFriends();
                 break;
             }
-            System.out.print("Id " + frWait + " không tồn tại, mời nhập lại: ");
+            if (frWait != null) {
+                break;
+            }
+            System.out.print("Id " + frWait + " không tồn tại, mời nhập lại(gõ 'exit' để thoát): ");
         }
         choiceConfirmFr(frWait);
     }
@@ -194,7 +200,7 @@ public class FriendsLogic {
             Friends friends = new Friends(user.getId(), userList1);
             friendsList.add(friends);
         }
-        friendsMyFileUtil.writeDataFromFile(friendsList, "friend.dat");
+        friendsMyFileUtil.writeDataFromFile(friendsList, "friends.dat");
 
     }
 

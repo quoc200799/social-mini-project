@@ -16,6 +16,7 @@ public class SearchLogic {
     private List<SearchUser> searchUsers;
     private final MyFileUtil<Friends> friendsMyFileUtil = new MyFileUtil<>();
     private final MyFileUtil<User> userMyFileUtil = new MyFileUtil<>();
+    private List<Friends> myFriends;
 
     private List<Friends> friendsList;
 
@@ -24,20 +25,23 @@ public class SearchLogic {
 
         List<User> userFile = userMyFileUtil.readDataFromFile("user.dat");
         userList = userFile == null ? new ArrayList<>() : userFile;
+
         List<Friends> friendsFile = friendsMyFileUtil.readDataFromFile("change.dat");
         friendsList = friendsFile == null ? new ArrayList<>() : friendsFile;
+
+        List<Friends> myFriendsFile = friendsMyFileUtil.readDataFromFile("friends.dat");
+        myFriends = myFriendsFile == null ? new ArrayList<>() : myFriendsFile;
     }
 
     private void menuSearch() {
         System.out.println("Mời bạn chọn các chức năng.");
-        System.out.println("1. Xem thêm.");
-        System.out.println("2. Chọn bạn bè.");
+        System.out.println("1. Tìm kiếm bạn bè theo tên.");
+        System.out.println("2. Tìm kiếm người hợp với bạn.");
         System.out.println("3. Quay lại");
         System.out.print("Chọn chức năng: ");
     }
 
     public void searchChoice() {
-        searchForFavorite();
         menuSearch();
         int temp;
         while (true) {
@@ -54,21 +58,20 @@ public class SearchLogic {
         while (true) {
             switch (temp) {
                 case 1:
-                    showUser();
+                    searchByName();
+                    choiceFriend();
                     break;
                 case 2:
+                    searchForFavorite();
                     choiceFriend();
                     break;
                 case 3:
                     Controller controller = new Controller(user);
                     controller.controllerChoice();
                     break;
-
             }
         }
-
     }
-
     private void searchForFavorite() {
         searchUsers = new ArrayList<>();
         for (int i = 0; i < userList.size(); i++) {
@@ -90,9 +93,34 @@ public class SearchLogic {
     }
 
     private void showUser() {
-        for (SearchUser searchUser : searchUsers) {
-            System.out.println("+ ID= " + searchUser.getUser().getId());
-            System.out.println("+ Tên: " + searchUser.getUser().getFullname());
+        int size = Math.min(searchUsers.size() , 5);
+        for (int i = 0; i < size; i++) {
+            if(!searchUsers.get(i).getUser().getId().equals(user.getId())){
+                System.out.println("+ ID= " + searchUsers.get(i).getUser().getId());
+                System.out.println("+ Tên: " + searchUsers.get(i).getUser().getFullname());
+            }
+        }
+    }
+    private void searchByName(){
+        List<User> listSearchByName = new ArrayList<>();
+        System.out.print("Nhập tên bạn bè bạn muốn tìm kiếm: ");
+        String s = new Scanner(System.in).nextLine();
+
+        for (int i = 0; i < userList.size(); i++) {
+            if(!userList.get(i).getId().equals(user.getId()) && userList.get(i).getFullname().toLowerCase().contains(s.trim().toLowerCase())){
+                listSearchByName.add(userList.get(i));
+            }
+        }
+
+        if(listSearchByName.size() == 0){
+            System.out.println("Không tìm thấy kết quả tìm kiếm");
+            System.out.println("---------------------");
+            searchChoice();
+        }else {
+            for (int i = 0; i < listSearchByName.size(); i++) {
+                    System.out.println("+ ID: " + listSearchByName.get(i).getId());
+                    System.out.println("+ Tên: " + listSearchByName.get(i).getFullname());
+            }
         }
     }
     private int totalFavorite(User userx) {
@@ -108,18 +136,22 @@ public class SearchLogic {
     private void choiceFriend() {
         String userId;
         User userAddFr;
-        System.out.print("Mời bạn nhập mã ngươời bạn muốn gửi lmkb: ");
+        System.out.print("Mời bạn nhập mã người bạn muốn gửi lmkb(Gõ 'exit' để thoát): ");
         while (true) {
             userId = new Scanner(System.in).nextLine();
             userAddFr = findUserById(userId);
             if (userAddFr != null) {
                 break;
             }
+            if (userId.equals("exit")) {
+                searchChoice();
+                break;
+            }
             System.out.print("không có mã " + userId + ", vui lòng nhập lại: ");
         }
         boolean checkFr = true;
         for (int i = 0; i < friendsList.size(); i++) {
-            if (userAddFr.getId().equals(friendsList.get(i).getId())){
+            if (userId.equals(friendsList.get(i).getId())){
                 checkFr = false;
                 friendsList.get(i).getUserList().add(user);
                 friendsMyFileUtil.writeDataFromFile(friendsList, "change.dat");

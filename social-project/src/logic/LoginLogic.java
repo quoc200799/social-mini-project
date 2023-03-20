@@ -48,7 +48,7 @@ public class LoginLogic {
         }
         switch (temp) {
             case 1:
-                show();
+//                show();
                 login();
                 break;
             case 2:
@@ -149,6 +149,7 @@ public class LoginLogic {
         }
         this.username = username;
         this.password = inputPassword(userlogin);
+        System.out.println("-------------------------");
         loginSuccess(userlogin);
 
     }

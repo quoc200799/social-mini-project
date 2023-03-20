@@ -1,8 +1,9 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Friends {
+public class Friends implements Serializable {
     private String id;
     private List<User> userList;
 

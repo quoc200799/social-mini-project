@@ -1,5 +1,6 @@
 package logic;
 
+import entity.Messenger;
 import entity.User;
 
 import java.util.Scanner;
@@ -40,10 +41,10 @@ public class Controller {
         while (true) {
             try {
                 temp = new Scanner(System.in).nextInt();
-                if (temp >= 1 && temp <= 4) {
+                if (temp >= 1 && temp <= 5) {
                     break;
                 }
-                System.out.print("Chức năng từ [1, 4], mời nhập lại");
+                System.out.print("Chức năng từ [1, 5], mời nhập lại");
             } catch (Exception e) {
                 System.out.print("Nhập sai định dạng, mời nhập lại: ");
             }
@@ -62,7 +63,8 @@ public class Controller {
                 informationLogin.myInfor();
                 break;
             case 4:
-
+                MessengerLogic messengerLogic = new MessengerLogic(user);
+                messengerLogic.choiceMessenger();
                 break;
             case 5:
                  LoginLogic loginLogic = new LoginLogic();
